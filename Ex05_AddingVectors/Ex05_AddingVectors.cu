@@ -25,13 +25,19 @@ __global__ void addKernel(const int* a, const int* b, int* c, int size)
 	if (i < size)
 		c[i] = a[i] + b[i];
 
-	// printf("ThreadIdx(% u, % u, % u)\n", threadIdx.x, threadIdx.y, threadIdx.z);
+	printf("%u %u %u %d\n", blockDim.x, blockIdx.x, threadIdx.x, i);
 }
+
+// 큰 문제에 대해서는
+// addKernel<<<size/numThreadsPerBlock, numThreadsPerBlock>>>(...)
+// addKernel<<<1, 나머지>>>(...)
+// 이렇게 커널 호출 자체를 두 번 하는 것 보다 if(i < size) 같이 조건을 걸어주는 것이 (보통) 더 빠르고 편합니다.
 
 int main()
 {
 	const int size = 1024 * 1024 * 256; // 여기서는 블럭을 여러 개 사용해야 하는 큰 size
 	//const int size = 37;
+	//const int size = 8;
 
 	// 생각해볼 점: 블럭이 몇 개가 필요할까?
 
@@ -66,9 +72,11 @@ int main()
 		cudaMemcpy(dev_a, a.data(), size * sizeof(int), cudaMemcpyHostToDevice);
 		cudaMemcpy(dev_b, b.data(), size * sizeof(int), cudaMemcpyHostToDevice);
 
-		// const int threadsPerBlock = 256; // 최대 deviceProp.maxThreadsPerBlock = 1024 까지 가능
+		// const int threadsPerBlock = 1024; // 최대 deviceProp.maxThreadsPerBlock = 1024 까지 가능
 		// int blocks = TODO; // 블럭 여러 개 사용
 		// addKernel <<<TODO, TODO>>> (dev_a, dev_b, dev_c, size);
+
+		// addKernel << <2, 4 >> > (dev_a, dev_b, dev_c, size);
 
 		// 안내: kernel 실행 후 cudaGetLastError() 생략
 
