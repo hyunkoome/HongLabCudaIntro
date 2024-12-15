@@ -40,10 +40,17 @@ __global__ void atomicSumReductionKernel(float *input, float *output) {
 
     unsigned int i = threadIdx.x + blockDim.x * blockIdx.x;
 
-    output[0] += input[0];
+    // output[0] += input[i];
 
     // TODO; // <- AtomicAdd()
 }
+
+// 원래 값 1에다가 쓰레드 2개가 각각 1씩 더해서 3이 되어야 하는 경우
+// output[0] = 1
+// thread 0: 1 read
+// thread 1: 1 read
+// thread 0: output[0] <- 1 + 1 저장
+// thread 1: output[0] <- 1 + 1 저장 (현재 output[0]은 2이지만 thread1은 알 수 없음)
 
 __global__ void convergentSumReductionKernel(float *input,
                                              float *output) { // block 하나로 처리가능한 크기
@@ -117,10 +124,10 @@ int main(int argc, char *argv[]) {
     cudaMalloc(&dev_output, sizeof(float));
     cudaMemcpy(dev_input, arr.data(), size * sizeof(float), cudaMemcpyHostToDevice);
 
-     timedRun("Atomic", [&]() {
-         int numBlocks = (size + threadsPerBlock - 1) / threadsPerBlock;
-         atomicSumReductionKernel<<<numBlocks, threadsPerBlock>>>(dev_input, dev_output);
-     }); // 68 ms
+    timedRun("Atomic", [&]() {
+        int numBlocks = (size + threadsPerBlock - 1) / threadsPerBlock;
+        atomicSumReductionKernel<<<numBlocks, threadsPerBlock>>>(dev_input, dev_output);
+    }); // 68 ms
 
     // timedRun("GPU Sum", [&]() {
     //     convergentSumReductionKernel<<<1, threadsPerBlock>>>(dev_input, dev_output); // 블럭이
