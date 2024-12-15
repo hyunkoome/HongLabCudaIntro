@@ -70,6 +70,8 @@ __global__ void convergentSumReductionKernel(float *input,
 
 __global__ void sharedMemorySumReductionKernel(float *input, float *output) {
 
+    // __shared__ float inputShared[1024];
+
     extern __shared__ float inputShared[]; // <- 블럭 안에서 여러 쓰레드들이 공유하는 빠른 메모리
 
     unsigned int t = threadIdx.x;
@@ -126,20 +128,21 @@ int main(int argc, char *argv[]) {
     cudaMalloc(&dev_output, sizeof(float));
     cudaMemcpy(dev_input, arr.data(), size * sizeof(float), cudaMemcpyHostToDevice);
 
-    timedRun("Atomic", [&]() {
-        int numBlocks = (size + threadsPerBlock - 1) / threadsPerBlock;
-        atomicSumReductionKernel<<<numBlocks, threadsPerBlock>>>(dev_input, dev_output);
-    }); // 68 ms
+    // timedRun("Atomic", [&]() {
+    //     int numBlocks = (size + threadsPerBlock - 1) / threadsPerBlock;
+    //     atomicSumReductionKernel<<<numBlocks, threadsPerBlock>>>(dev_input, dev_output);
+    // }); // 68 ms
 
     // timedRun("GPU Sum", [&]() {
     //     convergentSumReductionKernel<<<1, threadsPerBlock>>>(dev_input, dev_output); // 블럭이
     //     하나일 때만 사용
     // });
 
-    // timedRun("GPU Sum", [&]() {
-    //     sharedMemorySumReductionKernel<<<1, threadsPerBlock, threadsPerBlock * sizeof(float)>>>(
-    //         dev_input, dev_output); // 블럭이 하나일 때만 사용
-    // });
+    //timedRun("GPU Sum", [&]() {
+    //    sharedMemorySumReductionKernel<<<1, threadsPerBlock, threadsPerBlock * sizeof(float)>>>(
+    //        dev_input, dev_output); // 블럭이 하나일 때만 사용
+    //});
+    // kernel<<<블럭수, 쓰레드수, 공유메모리크기>>>(...);
 
     // timedRun("Segmented", [&]() {
     //     int numBlocks = (size / 2 + threadsPerBlock - 1) / threadsPerBlock; // size 나누기 2 주의
