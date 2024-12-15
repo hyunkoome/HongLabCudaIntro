@@ -50,6 +50,7 @@ __global__ void atomicSumReductionKernel(float *input, float *output) {
     // thread 1: output[0] <- 1 + 1 저장 (현재 output[0]은 2이지만 thread1은 알 수 없음)
 
     // TODO; // <- AtomicAdd()로 정확하게 계산하지만 지나치게 느려집니다.
+    //    여러개의 쓰레드들이 자기 차례를 기다려야 하기 때문입니다.
 }
 
 // 블럭이 하나일 때만 사용 가능
@@ -59,7 +60,7 @@ __global__ void convergentSumReductionKernel(float *input,
 
     for (unsigned int stride = blockDim.x; stride >= 1; stride /= 2) {
         if (threadIdx.x < stride) {
-            // TODO: 
+            // TODO:
         }
         __syncthreads(); // <- 같은 블럭 안에 있는 쓰레드들 동기화
     }
