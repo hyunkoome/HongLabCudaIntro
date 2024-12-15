@@ -34,9 +34,13 @@ void timedRun(const string name, const function<void()> &func) {
     cudaEventDestroy(stop);
 }
 
+// 교재: "Programming Massively Parallel Processors: A Hands-on Approach" 4th
+
 __global__ void atomicSumReductionKernel(float *input, float *output) {
 
     unsigned int i = threadIdx.x + blockDim.x * blockIdx.x;
+
+    output[0] += input[0];
 
     // TODO; // <- AtomicAdd()
 }
@@ -113,10 +117,10 @@ int main(int argc, char *argv[]) {
     cudaMalloc(&dev_output, sizeof(float));
     cudaMemcpy(dev_input, arr.data(), size * sizeof(float), cudaMemcpyHostToDevice);
 
-    // timedRun("Atomic", [&]() {
-    //     int numBlocks = (size + threadsPerBlock - 1) / threadsPerBlock;
-    //     atomicSumReductionKernel<<<numBlocks, threadsPerBlock>>>(dev_input, dev_output);
-    // }); // 68 ms
+     timedRun("Atomic", [&]() {
+         int numBlocks = (size + threadsPerBlock - 1) / threadsPerBlock;
+         atomicSumReductionKernel<<<numBlocks, threadsPerBlock>>>(dev_input, dev_output);
+     }); // 68 ms
 
     // timedRun("GPU Sum", [&]() {
     //     convergentSumReductionKernel<<<1, threadsPerBlock>>>(dev_input, dev_output); // 블럭이
