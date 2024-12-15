@@ -62,7 +62,8 @@ int main()
 		cudaMemcpy(dev_b, b.data(), size * sizeof(int), cudaMemcpyHostToDevice);
 
 		// 블럭 1개 * 쓰레드 size개
-		// addKernel << <1, TODO >> > (dev_a, dev_b, dev_c);
+		// addKernel < <<1, TODO >> > (dev_a, dev_b, dev_c);
+		// addKernel<<<블럭이 몇 개 인지, 각 블럭당 쓰레드가 몇 개인지 >>>(dev_a, dev_b, dev_c);
 
 		cudaDeviceSynchronize();       // kernel이 끝날때까지 대기 (동기화)
 

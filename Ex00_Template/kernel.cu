@@ -13,7 +13,7 @@ __global__ void addKernel(int *c, const int *a, const int *b)
 {
     int i = threadIdx.x;
     c[i] = a[i] + b[i];
-    c[i] *= 10;
+    // c[i] *= 10;
 }
 
 int main()
@@ -51,6 +51,9 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)
     int *dev_b = 0;
     int *dev_c = 0;
     cudaError_t cudaStatus;
+
+    // HOST: CPU
+    // DEVICE: GPU
 
     // Choose which GPU to run on, change this on a multi-GPU system.
     cudaStatus = cudaSetDevice(0);
