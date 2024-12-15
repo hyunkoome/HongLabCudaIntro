@@ -138,14 +138,14 @@ int main(int argc, char *argv[]) {
     //     하나일 때만 사용
     // });
 
-    //timedRun("GPU Sum", [&]() {
-    //    sharedMemorySumReductionKernel<<<1, threadsPerBlock, threadsPerBlock * sizeof(float)>>>(
-    //        dev_input, dev_output); // 블럭이 하나일 때만 사용
-    //});
-    // kernel<<<블럭수, 쓰레드수, 공유메모리크기>>>(...);
+    // timedRun("GPU Sum", [&]() {
+    //     sharedMemorySumReductionKernel<<<1, threadsPerBlock, threadsPerBlock * sizeof(float)>>>(
+    //         dev_input, dev_output); // 블럭이 하나일 때만 사용
+    // });
+    //  kernel<<<블럭수, 쓰레드수, 공유메모리크기>>>(...);
 
     // timedRun("Segmented", [&]() {
-    //     int numBlocks = (size / 2 + threadsPerBlock - 1) / threadsPerBlock; // size 나누기 2 주의
+    //     int numBlocks = TODO; // size 나누기 2 주의
     //     segmentedSumReductionKernel<<<numBlocks, threadsPerBlock,
     //                                   threadsPerBlock * sizeof(float)>>>(dev_input, dev_output);
     // });  // 1 ms 근처
