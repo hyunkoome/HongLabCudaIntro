@@ -59,7 +59,7 @@ __global__ void convergentSumReductionKernel(float *input,
 
     for (unsigned int stride = blockDim.x; stride >= 1; stride /= 2) {
         if (threadIdx.x < stride) {
-            input[i] += input[i + stride];
+            // TODO: 
         }
         __syncthreads(); // <- 같은 블럭 안에 있는 쓰레드들 동기화
     }
@@ -80,7 +80,7 @@ __global__ void sharedMemorySumReductionKernel(float *input, float *output) {
         __syncthreads();
 
         if (threadIdx.x < stride) {
-            inputShared[t] += inputShared[t + stride];
+            // TODO:
         }
     }
     if (t == 0)
