@@ -4,6 +4,12 @@
 
 using namespace std;
 
+// 공부 안내: 멀티쓰레딩은 디버거에서 step-in 만으로는 실행 순서를 추적하기가 어렵습니다. main()
+// 함수가 실행되는 쓰레드와 새로 만든 쓰레드가 독립적으로 실행되기 때문입니다. 브레이크 포인트를
+// 여기저기 찍어두거나 printf()로 메시지를 출력하게 해서 확인 해야 합니다. 예를 들면 main() 안의
+// while 루프 안쪽과 Run() 안의 while 루프 안쪽에 모두 브레이크 포인트를 찍어두고 디버거로 실행
+// 순서를 추적해보세요.
+
 class VideoReader // 생산자(producer)
 {
   public:
@@ -74,11 +80,11 @@ int main() // 소비자(consumer)
             break;
         }
 
-        //if (p.GetData() == 5) { // 소비자가 생산자에게 중단 신호를 주는 경우
-        //    p.Stop();
-        //    cout << "Stop" << endl;
-        //    break;
-        //}
+        // if (p.GetData() == 5) { // 소비자가 생산자에게 중단 신호를 주는 경우
+        //     p.Stop();
+        //     cout << "Stop" << endl;
+        //     break;
+        // }
 
         cout << p.GetData() << endl; // 소비(consume)
 

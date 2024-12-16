@@ -1,4 +1,4 @@
-#include "WindowsSecurityAttributes.h"
+﻿#include "WindowsSecurityAttributes.h"
 
 #ifdef _WIN64
 WindowsSecurityAttributes::WindowsSecurityAttributes() {

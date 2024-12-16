@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2015-2016 The Khronos Group Inc.
  * Copyright (c) 2015-2016 Valve Corporation
  * Copyright (c) 2015-2016 LunarG, Inc.
