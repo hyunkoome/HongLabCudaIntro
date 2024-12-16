@@ -13,6 +13,7 @@ CUDA 버전 안내
 - 현재 프로젝트들이 CUDA 12.6으로 설정되어 있습니다. 12.4 같은 다른 버전을 사용하실 경우에는 VSCode 같은 문서 편집기로 간단히 설정을 바꿔줄 수 있습니다. 방법은 강의 영상에서 안내해 드립니다.
 
 VCPKG 라이브러리 설치
+- ffmpeg 설치는 시간이 꽤 걸립니다.
 ```
 git clone https://github.com/microsoft/vcpkg.git
 cd vcpkg
