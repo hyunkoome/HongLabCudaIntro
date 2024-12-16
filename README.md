@@ -11,3 +11,13 @@
 
 CUDA 버전 안내
 - 현재 프로젝트들이 CUDA 12.6으로 설정되어 있습니다. 12.4 같은 다른 버전을 사용하실 경우에는 VSCode 같은 문서 편집기로 간단히 설정을 바꿔줄 수 있습니다. 방법은 강의 영상에서 안내해 드립니다.
+
+VCPKG 라이브러리 설치
+```
+git clone https://github.com/microsoft/vcpkg.git
+cd vcpkg
+./bootstrap-vcpkg.bat
+./vcpkg install vulkan:x64-windows, stb:x64-windows, glfw3:x64-windows, glm:x64-windows
+./vcpkg install ffmpeg[avcodec,avdevice,avfilter,avformat,swresample,swscale]:x64-windows
+```
+
