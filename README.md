@@ -18,7 +18,15 @@ VCPKG 라이브러리 설치
 git clone https://github.com/microsoft/vcpkg.git
 cd vcpkg
 ./bootstrap-vcpkg.bat
-./vcpkg install vulkan:x64-windows, stb:x64-windows, glfw3:x64-windows, glm:x64-windows
 ./vcpkg install ffmpeg[avcodec,avdevice,avfilter,avformat,swresample,swscale]:x64-windows
+```
+vulkan, stb, glfw3, glm은 아래 사용하세요. (순서대로 컴마 구분, 빈칸 구분, 개별 설치)
+```
+./vcpkg install vulkan:x64-windows, stb:x64-windows, glfw3:x64-windows, glm:x64-windows
+./vcpkg install vulkan:x64-windows stb:x64-windows glfw3:x64-windows glm:x64-windows
+./vcpkg install vulkan:x64-windows
+./vcpkg install stb:x64-windows
+./vcpkg install glfw3:x64-windows
+./vcpkg install glm:x64-windows
 ```
 
