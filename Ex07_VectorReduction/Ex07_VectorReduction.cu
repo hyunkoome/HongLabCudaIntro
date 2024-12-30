@@ -49,7 +49,7 @@ __global__ void atomicSumReductionKernel(float *input, float *output) {
     // thread 0: output[0] <- 1 + 1 저장
     // thread 1: output[0] <- 1 + 1 저장 (현재 output[0]은 2이지만 thread1은 알 수 없음)
 
-    // TODO; // <- AtomicAdd()로 정확하게 계산하지만 지나치게 느려집니다.
+    // TODO; // <- atomicAdd()로 정확하게 계산하지만 지나치게 느려집니다.
     //    여러개의 쓰레드들이 자기 차례를 기다려야 하기 때문입니다.
 }
 
