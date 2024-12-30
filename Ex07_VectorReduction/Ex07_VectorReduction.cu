@@ -42,12 +42,32 @@ __global__ void atomicSumReductionKernel(float *input, float *output) {
 
     // output[0] += input[i]; // <- 여러 쓰레드가 경쟁적으로 메모리에 접근하기 때문에 오류 발생
 
-    // 원래 값 1에다가 쓰레드 2개가 각각 1씩 더해서 3이 되어야 하는 경우
-    // output[0] = 1
-    // thread 0: 1 read
-    // thread 1: 1 read
-    // thread 0: output[0] <- 1 + 1 저장
-    // thread 1: output[0] <- 1 + 1 저장 (현재 output[0]은 2이지만 thread1은 알 수 없음)
+    /*
+    * 두 개의 쓰레드가 한 메모리 공간을 두고 경쟁(racing) 하는 사례
+    * 원래 값 1에다가 쓰레드 2개가 각각 1씩 더해서 3이 되어야 하는 경우
+
+     1. 시리얼로 하나씩 더할 때
+     - 처음에 저장되어 있는 값 output[0] = 1
+     - thread 0이 output[0]의 1을 읽어옴
+     - thread 0이 읽어온 1에다가 1을 더함
+     - thread 0이 output[0]에다가 2를 저장
+     - thread 1이 output[0]의 2를 읽어옴
+     - thread 1이 읽어온 2에다가 1을 더함
+     - thread 1이 output[0]에다가 3을 저장
+     - 결과적으로 output[0]은 3
+
+     2. 멀티쓰레딩으로 하나씩 더할 때 문제가 생기는 경우
+     - output[0] = 1
+     - thread 0: 1 read
+     - thread 1: 1 read (thread 0이 write 하기 전에 thread 1이 읽어옴)
+     - thread 0: output[0] <- 1 + 1 저장
+     - thread 1: output[0] <- 1 + 1 저장 (앞서 thread 0이 저장한 output[0]은 2이지만 thread 1은 알지
+    못함)
+
+    멀티쓰레딩을 사용하면 경우에 따라서 문제가 생기지 않을 수도 있습니다. 그래서 정상작동하는 것으로
+    착각하는 경우도 많습니다. 내가 구현하는 방식에 메모리 접근 경쟁이 생기는지 아닌지를 항상
+    주의해야 합니다.
+    */
 
     // TODO; // <- atomicAdd()로 정확하게 계산하지만 지나치게 느려집니다.
     //    여러개의 쓰레드들이 자기 차례를 기다려야 하기 때문입니다.
