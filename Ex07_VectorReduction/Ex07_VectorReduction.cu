@@ -74,6 +74,9 @@ __global__ void atomicSumReductionKernel(float *input, float *output) {
 }
 
 // 블럭이 하나일 때만 사용 가능
+// 엔비디아 슬라이드 그림 속의 Values는 여기서 input 입니다.
+// for문 안의 각 단계에서 입력 배열(input)에 덮어쓰면서 reduce 해 나가다가
+// 마지막 하나만 output에 저장합니다.
 __global__ void convergentSumReductionKernel(float *input,
                                              float *output) { // block 하나로 처리가능한 크기
     unsigned int i = threadIdx.x;
