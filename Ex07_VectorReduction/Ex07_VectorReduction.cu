@@ -83,7 +83,7 @@ __global__ void convergentSumReductionKernel(float *input,
 
     for (unsigned int stride = blockDim.x; stride >= 1; stride /= 2) {
         if (threadIdx.x < stride) {
-            // TODO:
+            // TODO: i를 사용해도 되고 threadIdx.x를 직접 사용해도 됩니다.
         }
         __syncthreads(); // <- 같은 블럭 안에 있는 쓰레드들 동기화
     }
@@ -156,6 +156,7 @@ int main(int argc, char *argv[]) {
     //     atomicSumReductionKernel<<<numBlocks, threadsPerBlock>>>(dev_input, dev_output);
     // }); // 68 ms
 
+    // 주의: size = threadsPerBlock * 2 라고 가정 (블럭 하나만 사용)
     // timedRun("GPU Sum", [&]() {
     //     convergentSumReductionKernel<<<1, threadsPerBlock>>>(dev_input, dev_output); // 블럭이
     //     하나일 때만 사용
