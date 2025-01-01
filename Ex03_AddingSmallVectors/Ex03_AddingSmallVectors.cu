@@ -65,9 +65,16 @@ int main()
 		// addKernel < <<1, TODO >> > (dev_a, dev_b, dev_c);
 		// addKernel<<<블럭이 몇 개 인지, 각 블럭당 쓰레드가 몇 개인지 >>>(dev_a, dev_b, dev_c);
 
+		// 안내:
+		// - cudaMemcpy()와 달리 커널 호출은 항상 비동기적(asynchronous)입니다. 
+		// - GPU에게 명령만 내리고 CPU는 바로 다음 명령을 수행한다는 의미입니다.
+		// - CPU에게 GPU가 일을 다 끝날때까지 강제로 기다리게 하고 싶다면 아래의 
+		// - cudaDeviceSynchronize()를 사용할 수 있습니다.
+		// - 함수 이름에서 볼 수 있듯이, 이렇게 기다리는 것을 "동기화(synchronize)"라고 합니다.
+
 		cudaDeviceSynchronize();       // kernel이 끝날때까지 대기 (동기화)
 
-		// 안내: kernel 실행 후 cudaGetLastError() 생략
+		// 안내: kernel 실행 후 cudaGetLastError() 생략하였습니다.
 
 		// 결과 복사 device -> host
 		cudaMemcpy(c.data(), dev_c, size * sizeof(int), cudaMemcpyDeviceToHost);

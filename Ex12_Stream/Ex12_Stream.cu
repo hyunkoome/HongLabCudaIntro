@@ -63,7 +63,8 @@ int main()
 
 	{
 
-		// 참고: cudaStreamSynchronize()를 사용하고 싶은 경우
+		// 참고: cudaStreamSynchronize()를 사용해서 개별 스트림만 따로 동기화 하고 싶은 경우
+		//      여기서는 cudaDeviceSynchronize()를 사용하기 때문에 스트림만 따로 동기화하지는 않았습니다.
 		//{
 		//	cudaSetDeviceFlags(cudaDeviceScheduleBlockingSync);
 
@@ -96,17 +97,26 @@ int main()
 
 		cudaEventRecord(start, 0); // 시작 시간 기록 (H2D -> Kernel -> D2H)
 
-		cudaMemcpyAsync(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice, stream); // 비동기적으로 복사 복사
-		cudaMemcpyAsync(dev_b, b, size * sizeof(int), cudaMemcpyHostToDevice, stream);
+		// TODO 완성해야 실행됩니다. 간단합니다.
+
+		// 주의: 뒤에 Async가 붙은 cudaMemcpyAsync() 사용
+		//cudaMemcpyAsync(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice, TODO ); // 비동기적으로 복사 복사
+		//cudaMemcpyAsync(dev_b, b, size * sizeof(int), cudaMemcpyHostToDevice, TODO );
 
 		int blocks = int(ceil(float(size) / threadsPerBlock)); // 블럭 여러 개 사용
-		addKernel << <blocks, threadsPerBlock, 0, stream >> > (dev_a, dev_b, dev_c, size);
+		//addKernel << <blocks, threadsPerBlock, 0, TODO >> > (dev_a, dev_b, dev_c, size);
+
+		// 안내: 
+		// - 커널 호출할때 stream을 지정해주지 않으면 내부적으로 기본 스트림을 사용합니다.
+		// - cudaMemcpy()와 달리 커널 호출은 항상 비동기적입니다. GPU에게 명령만 내리고 CPU는 바로 다음 명령을 수행합니다.
+		// - CPU에게 GPU가 일을 다 끝날때까지 강제로 기다리게 하고 싶다면 아래의 cudaDeviceSynchronize()를 사용할 수 있습니다.
+		// - 함수 이름에서 볼 수 있듯이, 이렇게 기다리는 것을 "동기화(synchronize)"라고 합니다.
 
 		// 결과 복사 device -> host
-		cudaMemcpyAsync(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost, stream);
+		//cudaMemcpyAsync(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost, TODO );
 
 		cudaEventRecord(stop, 0);  // 끝나는 시간 기록
-		cudaDeviceSynchronize();       // kernel이 끝날때까지 대기 (동기화)
+		cudaDeviceSynchronize();   // kernel이 끝날때까지 대기 (동기화)
 
 		float milliseconds = 0;
 		cudaEventElapsedTime(&milliseconds, start, stop); // 걸린 시간 계산
@@ -145,8 +155,6 @@ int main()
 
 		cudaDeviceReset();
 	}
-
-
 
 	return 0;
 }
