@@ -94,12 +94,16 @@ int main() {
 
         int i = 0;
 
+        // 안내:
+        // - 이번 예제는 빈칸이 없습니다. 자신의 컴퓨터 사양에 맞춰서 전송/실행이 겹치는 패턴을 만들어 보세요.
+        // - 아래 코드의 핵심은 데이터 전송과 커널 실행을 따로 묶었다는 점입니다.
+
         while (i <= numSplits) // i_split, i_stream 따로 사용
         {
             for (int i_stream = 0; i_stream < numStreams; i_stream++) {
                 int i_split = i + i_stream;
 
-                if (i > 0) // 처음에는 받아올 데이터가 없음
+                if (i > 0) // D2H 복사 (처음에는 받아올 데이터가 없음)
                 {
                     // cout << "C " << i_split - numStreams << " " << i_stream << endl;
                     cudaMemcpyAsync(&c[(i_split - numStreams) * split_size], dev_c[i_stream],
@@ -107,7 +111,7 @@ int main() {
                                     streams[i_stream]);
                 }
 
-                if (i_split < numSplits) {
+                if (i_split < numSplits) { // H2D 복사 (마지막에는 보낼 데이터가 없음)
                     cudaMemcpyAsync(dev_a[i_stream], &a[i_split * split_size],
                                     split_size * sizeof(int), cudaMemcpyHostToDevice,
                                     streams[i_stream]); // size -> split_size
