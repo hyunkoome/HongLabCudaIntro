@@ -85,25 +85,25 @@ int main()
 
 		for (int s = 0; s < numSplits; s++)
 		{
-			// cudaStreamSynchronize(streams[s]);
+			// cudaStreamSynchronize(streams[s]); // 참고용이며 여기서는 사용하지 않습니다.
 
-			cudaMemcpyAsync(dev_a[s], &a[s * splitSize], splitSize * sizeof(int), cudaMemcpyHostToDevice, streams[s]); // size -> split_size
-			cudaMemcpyAsync(dev_b[s], &b[s * splitSize], splitSize * sizeof(int), cudaMemcpyHostToDevice, streams[s]); // size -> split_size
+			//cudaMemcpyAsync(dev_a[s], &a[s * splitSize], splitSize * sizeof(int), cudaMemcpyHostToDevice, TODO ); // size -> split_size
+			//cudaMemcpyAsync(dev_b[s], &b[s * splitSize], splitSize * sizeof(int), cudaMemcpyHostToDevice, TODO ); // size -> split_size
 		}
 
 		for (int s = 0; s < numSplits; s++)
 		{
             int threadsPerBlock = 1024; // 최대 deviceProp.maxThreadsPerBlock = 1024 까지 가능
 			int blocks = int(ceil(float(splitSize) / threadsPerBlock)); // 블럭 여러 개 사용
-			addKernel << <blocks, threadsPerBlock, 0, streams[s] >> > (dev_a[s], dev_b[s], dev_c[s], splitSize);
+			//addKernel << <blocks, threadsPerBlock, 0, TODO >> > (dev_a[s], dev_b[s], dev_c[s], splitSize);
 		}
 
 		for (int s = 0; s < numSplits; s++)
 		{
-			cudaMemcpyAsync(&c[s * splitSize], dev_c[s], splitSize * sizeof(int), cudaMemcpyDeviceToHost, streams[s]);
+			//cudaMemcpyAsync(&c[s * splitSize], dev_c[s], splitSize * sizeof(int), cudaMemcpyDeviceToHost, TODO );
 		}
 
-		//for(int s = 0; s < num_splits; s++)
+		//for(int s = 0; s < num_splits; s++)  // 참고용이며 여기서는 사용하지 않습니다.
 		//	cudaStreamSynchronize(streams[s]); // 밑에서 cudaDeviceSynchronize() 사용
 
 		cudaEventRecord(stop, 0);  // 끝나는 시간 기록
