@@ -83,13 +83,13 @@ int main()
 
 		for (int s = 0; s < numSplits; s++) 
 		{
-			cudaMemcpyAsync(dev_a, &a[s * split_size], split_size * sizeof(int), cudaMemcpyHostToDevice, stream); // size -> split_size
-			cudaMemcpyAsync(dev_b, &b[s * split_size], split_size * sizeof(int), cudaMemcpyHostToDevice, stream); // size -> split_size
+			//cudaMemcpyAsync(dev_a, &a[s * TODO ], TODO * sizeof(int), cudaMemcpyHostToDevice, stream); // size -> split_size
+			//cudaMemcpyAsync(dev_b, &b[s * TODO ], TODO * sizeof(int), cudaMemcpyHostToDevice, stream); // size -> split_size
 
-			int blocks = int(ceil(float(split_size) / threadsPerBlock)); // 블럭 여러 개 사용
-			addKernel << <blocks, threadsPerBlock, 0, stream >> > (dev_a, dev_b, dev_c, split_size);
+			//int blocks = int(ceil(float( TODO ) / threadsPerBlock)); // 블럭 여러 개 사용
+			//addKernel << <blocks, threadsPerBlock, 0, stream >> > (dev_a, dev_b, dev_c, TODO );
 			
-			cudaMemcpyAsync(&c[s*split_size], dev_c, split_size * sizeof(int), cudaMemcpyDeviceToHost, stream);
+			//cudaMemcpyAsync(&c[s * TODO ], dev_c, TODO * sizeof(int), cudaMemcpyDeviceToHost, stream);
 		}
 
 		cudaEventRecord(stop, 0);  // 끝나는 시간 기록
